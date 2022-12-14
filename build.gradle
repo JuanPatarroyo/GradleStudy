@@ -1,0 +1,29 @@
+apply plugin: "java"
+sourceCompatibility = "1.8"
+version = "1.0"
+jar {
+  manifest {
+    attributes "Main-Class": "HelloWorld" 
+  }
+}
+
+task helloWorld {
+    ext {
+      name = "Juanes"
+      email = "pruebas@correo.com"
+      version = "1.0"
+      project = "GradleProject"
+    }
+}
+// Usign a reference to create a doLast method
+helloWorld.doLast{
+  Date date = new Date()
+  println "Executing... "+project+" Date: "+date
+}
+
+task compileTask {
+  doLast{
+    println "Compiling project "+helloWorld.name+" "+helloWorld.version
+    println "If you find bugs, comunicate with "+helloWorld.email
+  }
+}
