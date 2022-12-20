@@ -1,18 +1,47 @@
 apply plugin: "java"
-sourceCompatibility = "1.8"
-version = "1.0"
+apply plugin: "application"
+
+sourceCompatibility = "1.8" // It indicates the java's version
+version = "1.0" 
+mainClassName = "HelloWorld" // Main class to application plugin
+
 jar {
   manifest {
-    attributes "Main-Class": "HelloWorld" 
+    attributes "Main-Class": "HelloWorld" //It indicates the main class in the jar
+  }
+}
+
+task a {
+  doLast{
+    println "executing task A"
+  }
+}
+
+task b {
+  dependsOn 'a' // It requires the task A execute before the task B
+  doLast{
+    println "executing task B"
+  }
+}
+
+task c (dependsOn: 'b') { // The same above instruction but in the constructor
+  doLast{
+    println "executing task C"
   }
 }
 
 task helloWorld {
-    ext {
+    ext { // Taks's variables
       name = "Juanes"
       email = "pruebas@correo.com"
       version = "1.0"
       project = "GradleProject"
+    }
+    doFirst{
+      println "Calling doFirst"
+    }
+    doLast{
+      println "Hello!"
     }
 }
 // Usign a reference to create a doLast method
@@ -26,4 +55,33 @@ task compileTask {
     println "Compiling project "+helloWorld.name+" "+helloWorld.version
     println "If you find bugs, comunicate with "+helloWorld.email
   }
+}
+
+task toDistribute {
+  onlyIf{ // Only if evaluates a condition, if it is true then the task will be do
+    new File('configuration.xml').exists() // Execute only if the file exists
+    //compileTask.didWork  // Execute only if compileTask works
+  }
+  doLast{
+    println "Distribuying my project"
+  }
+}
+
+compileTask.mustRunAfter helloWorld // Compile task must run after the task HelloWorld
+
+compileTask.finalizedBy toDistribute // Once the compileTask finalize the task toDistribute will be do
+
+task createDist {
+  new File('dist').mkdirs()
+}
+
+task copyTask (type: Copy, dependsOn: createDist){
+  from 'tools'
+  into 'dist/tools'
+  //include '*.txt'
+  exclude '*.cmd'
+}
+
+task zipTask{
+
 }
