@@ -82,6 +82,15 @@ task copyTask (type: Copy, dependsOn: createDist){
   exclude '*.cmd'
 }
 
-task zipTask{
+task executeTask (type: Exec, dependsOn: copyTask){
+  commandLine 'cmd', '/c', 'dir'
+  standardOutput = new FileOutputStream('dist/log.txt')
+}
 
+task zipTask(type: Zip, dependsOn: copyTask){
+  from 'dist'
+  archiveName 'archive.zip'
+  destinationDir(file('tools')) 
+  baseName 'myProject'
+  version '1.0.0-BETA'
 }
