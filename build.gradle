@@ -1,5 +1,6 @@
 apply plugin: "java"
 apply plugin: "application"
+apply plugin: "idea"
 
 sourceCompatibility = "1.8" // It indicates the java's version
 version = "1.0" 
@@ -93,4 +94,13 @@ task zipTask(type: Zip, dependsOn: copyTask){
   destinationDir(file('tools')) 
   baseName 'myProject'
   version '1.0.0-BETA'
+}
+
+// Adding dependencies
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'org.lwjgl:lwjgl:3.3.1'
 }
